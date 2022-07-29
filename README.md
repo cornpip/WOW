@@ -1,6 +1,8 @@
-<h1 align='center'>WOW | WEP TEAM 7</h1>
-
-![WAP_Black_NoBG](https://user-images.githubusercontent.com/75781414/166131265-be8c60b7-aa4f-4b06-bee6-ecb4a4cefccb.png)
+<h1 align='center'>WOW: Wap of World</h1>
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/75781414/166131265-be8c60b7-aa4f-4b06-bee6-ecb4a4cefccb.png" width=450>
+</p>
+<h3 align='center'>WAP 동아리 홈페이지를 만들어보자</h3>
 
 ## `Tech Stack`
 
@@ -67,25 +69,10 @@ S3_PROFILE_BUCKET=
 ```
 yarn add -g cocurrently && yarn start
 ```
+or
+```
+npm install -g concurrently
+npm run start_n
+```
 
 <br/><br/>
-
-## `Links`
-
-### [시작발표](https://docs.google.com/presentation/d/11UNfdN_Zp-fdB2hRkDI0qdbfMkyr5wkl/edit?usp=sharing&ouid=109400640189587377184&rtpof=true&sd=true)
-
-### [중간발표](https://docs.google.com/presentation/d/1c3kR_FOxQdsWvQEkxgMRVKmCg5MyK5aMyAUEhpoMSDk/edit?usp=sharing)
-
-### [종료발표]()
-
-<br/><br/>
-
-## `Contributors`
-
-### BACK-[최선효](https://github.com/cornpip)<span style="font-size:60%">(정보통신공학전공 17학번)</small>
-
-### BACK-[김민수](https://github.com/neko113)<span style="font-size:60%">(컴퓨터공학전공 19학번)</small>
-
-### FRONT-[성준영](https://github.com/sjyoung428)<span style="font-size:60%">(소프트웨어·인공지능전공 16학번)</small>
-
-### FRONT-[김재환](https://github.com/jh980608)<span style="font-size:60%">(소프트웨어·인공지능전공 18학번)</span>
