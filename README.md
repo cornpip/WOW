@@ -72,19 +72,27 @@ npm install -g concurrently
 npm run start_n
 ```
 
-<br/><br/>
+<br/>
 
 ## Main page
 <img src=img/main.PNG>
 
+<br/>
+
 ## Sign up
 <img src=img/signup.PNG>
+
+<br/>
 
 ## Write page
 <img src=img/write.PNG>
 
+<br/>
+
 ## Detail page
 <img src=img/detail.PNG>
+
+<br/>
 
 ## Mypage
 <img src=img/mypage.PNG>
@@ -146,7 +154,7 @@ Many는 array로 One은 instance로 가져온다.
 ```
 ex) comments_count: 3
 ```
-기본적으로 #1의 형태로 article의 목록을 받아오며 조건을 조정하여 tag별로, user별로, articleid별로, 순서별로 받아올 수 있다.  
+기본적으로 __#1__ 의 형태로 article의 목록을 받아오며 조건을 조정하여 tag별로, user별로, articleid별로, 순서별로 받아올 수 있다.  
 
 ```
 #2
@@ -165,7 +173,7 @@ const article = this.createQueryBuilder('article')
     ])
     .leftJoinAndSelect('article.images', 'article_image');
 ```
-#2 와 같이 article.comments를 join하고 그 안에서 comments.user를 join할 수 있다.
+__#2__ 와 같이 article.comments를 join하고 그 안에서 comments.user를 join할 수 있다.
 ```
 ex)
    "comments": [
@@ -215,7 +223,7 @@ const tagList = this.manager.query(
     [userId],
 );
 ```
-<br/><br/>
+<br/>
 
 ## mypage에서 내가 쓴 글 태그별 Count
 __[tag.repository.ts](https://github.com/cornpip/WOW/blob/master/server/src/article/repository/tag.repository.ts)__
