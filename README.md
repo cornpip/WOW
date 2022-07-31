@@ -1,9 +1,7 @@
 <h1 align='center'>WOW: Wap of World</h1>
-<p align="center">
-    <img src="https://user-images.githubusercontent.com/75781414/166131265-be8c60b7-aa4f-4b06-bee6-ecb4a4cefccb.png" width=450>
-</p>
-<h3 align='center'>WAP 동아리 홈페이지를 만들어보자</h3>
+<h3 align='center'>동아리 홈페이지를 만들어보자</h3>  
 
+## <center> [wap repo](https://github.com/pknu-wap/2022_1_WAP_WEP_TEAM7)
 ## `Tech Stack`
 
 ### Back
@@ -76,3 +74,183 @@ npm run start_n
 ```
 
 <br/><br/>
+
+## Main page
+<img src=img/main.PNG>
+
+## Sign up
+<img src=img/signup.PNG>
+
+## Write page
+<img src=img/write.PNG>
+
+## Detail page
+<img src=img/detail.PNG>
+
+## Mypage
+<img src=img/mypage.PNG>
+
+<br/><br/>
+
+## Nest Js module 구조
+`entity : `TypeORM 은 저장소 디자인 패턴을 지원하므로 사용합니다. entity에서 테이블을 생성하고 관계를 정의합니다.  
+`controller : `들어오는 요청의 경로와 응답을 설정합니다. 라우팅 기능을 담당합니다.  
+`service : `비지니스 로직을 담당합니다.  
+`repository : `sql 관련 로직을 담당합니다.  
+
+> 응답의 흐름 : `controller -> service -> repository`
+
+<br/><br/>
+
+## ERD
+<img src=img/erd.PNG>
+
+<br/><br/>
+
+## TypeORM
+__[article.repository.ts](https://github.com/cornpip/WOW/blob/master/server/src/article/repository/article.repository.ts)__
+```
+#1
+const articles = this.createQueryBuilder('article')
+    .orderBy('article.createdAt', 'DESC') //article 내림차순으로
+    .addOrderBy('article.id', 'DESC') //같을 때 최근 순으로
+    .leftJoin('article.user', 'user') 
+    .leftJoinAndSelect('article.tagList', 'tag')
+    .leftJoinAndSelect('article.images', 'article_image')
+    .addSelect(['user.id', 'user.username', 'user.email'])
+    .where('article.fk_user_id = :userId', { userId: userId })
+    .loadRelationCountAndMap('article.comments_count', 'article.comments');
+```
+
+`leftJoin('article.조인할엔티티', '별칭')` : join 후 addSelect 또는 select 를 따로 해야한다.  
+```
+ex) user: User { id: 3, username: 'kim', email: 'chdnjf13752@naver.com' }
+```
+`leftJoinAndSelect('article.조인할엔티티', '별칭')` : join 후 select 까지 해준다. join한 테이블의 모든 컬럼을 select 한다.   
+
+```
+ex) tagList: [ [Tag], [Tag], [Tag], [Tag], [Tag], [Tag] ]
+
+ex) user: User {
+       id: 3,
+       username: 'kim',
+       email: 'chdnjf13752@naver.com',
+       password: ...,
+       hashedRt: ....,
+       createdAt: 2022-07-29T16:24:50.593Z,
+       updatedAt: 2022-07-30T13:28:07.000Z
+    }
+```
+Many는 array로 One은 instance로 가져온다.  
+
+`loadRelationCountAndMap('article.컬럼명', 'count할 엔티티')` : group by의 COUNT 함수 역할을 해준다.
+```
+ex) comments_count: 3
+```
+기본적으로 #1의 형태로 article의 목록을 받아오며 조건을 조정하여 tag별로, user별로, articleid별로, 순서별로 받아올 수 있다.  
+
+```
+#2
+const article = this.createQueryBuilder('article')
+    .where('article.id = :id', { id })
+    .leftJoin('article.user', 'user')
+    .addSelect(['user.id', 'user.username', 'user.email'])
+    .leftJoinAndSelect('article.tagList', 'tag')
+    .leftJoinAndSelect('article.comments', 'comments')
+    .addOrderBy('comments.createdAt', 'DESC')
+    .leftJoin('comments.user', 'comment_user')
+    .addSelect([
+    'comment_user.id',
+    'comment_user.username',
+    'comment_user.email',
+    ])
+    .leftJoinAndSelect('article.images', 'article_image');
+```
+#2 와 같이 article.comments를 join하고 그 안에서 comments.user를 join할 수 있다.
+```
+ex)
+   "comments": [
+        {
+            "id": 5,
+            "text": "cc",
+            "fk_user_id": 3,
+            "fk_article_id": 3,
+            "createdAt": "2022-07-31T08:51:27.982Z",
+            "updatedAt": "2022-07-31T08:51:27.982Z",
+            "user": { //comments안에서 user가 join됨
+                "id": 3,
+                "username": "kim",
+                "email": "chdnjf13752@naver.com"
+            }
+        },
+        ..
+        ....
+    ]
+```
+
+Query Builder가 아닌 다음과 같이 find option을 사용할 수도 있고
+```
+#3
+  async findCommentsByArticleId(articleId: number): Promise<Comment[]> {
+    return await this.find({
+      where: { fk_article_id: articleId },
+      order: { createdAt: 'DESC' },
+      relations: ['user'],
+    });
+  }
+```
+EntityManager를 통해 sql문으로 실행할 수도 있다.  
+__[tag.repository.ts](https://github.com/cornpip/WOW/blob/master/server/src/article/repository/tag.repository.ts)__
+```
+#4
+const tagList = this.manager.query(
+    `
+    select tag.id, tag.name, articles_count from (
+    select count(fk_article_id) as articles_count, fk_tag_id from article_tags
+    inner join article on article.id = fk_article_id
+        and article.fk_user_id = ?
+    group by fk_tag_id
+    ) as q inner join tag on q.fk_tag_id = tag.id
+    order by articles_count desc
+    `,
+    [userId],
+);
+```
+<br/><br/>
+
+## mypage에서 내가 쓴 글 태그별 Count
+__[tag.repository.ts](https://github.com/cornpip/WOW/blob/master/server/src/article/repository/tag.repository.ts)__
+```
+select count(fk_article_id) as articles_count, fk_tag_id from article_tags
+    inner join article 
+    on article.id = fk_article_id and article.fk_user_id = ?
+    group by fk_tag_id
+```
+결과 예시:  
+|articles_count|fk_tag_id|
+|---|---|
+|1|3|
+|2|4|
+|1|6|
+|2|10|
+.....
+
+```
+select tag.id, tag.name, articles_count from (
+    select count(fk_article_id) as articles_count, fk_tag_id from article_tags
+        inner join article on article.id = fk_article_id
+          and article.fk_user_id = ?
+        group by fk_tag_id
+    ) as q inner join tag on q.fk_tag_id = tag.id
+    order by articles_count desc;
+```
+결과 예시:  
+|id|name|articles_count|
+|--|---|----|
+|4|python|2|
+|10|java|2|
+|11|test|2|
+|5|js|1|
+...
+
+결과적으로 user_id 넣으면 해당 user가 쓴 글들의 tag와 tag수 를 반환한다.
