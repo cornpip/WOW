@@ -1,10 +1,9 @@
 <h1 align='center'>WOW: Wap of World</h1>
 <h3 align='center'>동아리 홈페이지를 만들어보자</h3>  
 
-## <center> [wap repo](https://github.com/pknu-wap/2022_1_WAP_WEP_TEAM7)
-## `Tech Stack`
+<h3 align='center'><a href="https://github.com/pknu-wap/2022_1_WAP_WEP_TEAM7">wap repo</a></h3>  
 
-### Back
+### `Back`
 
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)
@@ -12,7 +11,7 @@
 ![TypeORM](https://img.shields.io/badge/typeORM-%2320232a.svg?style=for-the-badge&logo=typeorm&logoColor=%2361DAFB)
 ![AWS S3](https://img.shields.io/badge/AWS_S3-%569A31.svg?style=for-the-badge&logo=amazons3&logoColor=white)
 
-### Front
+### `Front`
 
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/vite-646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
@@ -22,7 +21,7 @@
 ![React Query](https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white)
 ![Zustand](https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=zustand&logoColor=%2361DAFB)
 
-<br/><br/>
+<br/>
 
 ## `Install & Execute`
 
@@ -93,19 +92,19 @@ npm run start_n
 <br/><br/>
 
 ## Nest Js module 구조
-`entity : `TypeORM 은 저장소 디자인 패턴을 지원하므로 사용합니다. entity에서 테이블을 생성하고 관계를 정의합니다.  
-`controller : `들어오는 요청의 경로와 응답을 설정합니다. 라우팅 기능을 담당합니다.  
-`service : `비지니스 로직을 담당합니다.  
-`repository : `sql 관련 로직을 담당합니다.  
+__`entity`__ : TypeORM 은 저장소 디자인 패턴을 지원하므로 사용합니다. entity에서 테이블을 생성하고 관계를 정의합니다.  
+__`controller`__ : 들어오는 요청의 경로와 응답을 설정합니다. 라우팅 기능을 담당합니다.  
+__`service`__ : 비지니스 로직을 담당합니다.  
+__`repository`__ : sql 관련 로직을 담당합니다.  
 
-> 응답의 흐름 : `controller -> service -> repository`
+> 응답의 흐름 : __`controller -> service -> repository`__
 
-<br/><br/>
+<br/>
 
 ## ERD
 <img src=img/erd.PNG>
 
-<br/><br/>
+<br/>
 
 ## TypeORM
 __[article.repository.ts](https://github.com/cornpip/WOW/blob/master/server/src/article/repository/article.repository.ts)__
