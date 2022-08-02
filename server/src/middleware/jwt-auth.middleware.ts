@@ -25,6 +25,7 @@ export class JwtAuthMiddleware implements NestMiddleware {
     @Res() res: Response,
     @Next() next: NextFunction,
   ) {
+    // console.log("this is middleware")
     const accessToken: string | undefined = req.cookies['access_token'];
     const refreshToken: string | undefined = req.cookies['refresh_token'];
     try {

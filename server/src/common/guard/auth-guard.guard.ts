@@ -10,6 +10,7 @@ import { Reflector } from '@nestjs/core';
 export class AuthGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
   public canActivate(context: ExecutionContext): boolean {
+    // console.log("this is guard");
     // Public()이 클래스전체나 개별라우터에 있을 경우 auth 건너 뜀
     const isPublic = this.reflector.getAllAndOverride('isPublic', [
       context.getHandler(),
@@ -19,6 +20,7 @@ export class AuthGuard implements CanActivate {
 
     const req = context.switchToHttp().getRequest();
     if (!req.userId) throw new HttpException('권한이 없습니다', 401);
-    return true;
+
+    return true
   }
 }

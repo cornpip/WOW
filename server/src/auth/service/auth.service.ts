@@ -53,12 +53,17 @@ export class AuthService {
       secret: this.configService.get('auth.refresh_token_secret'),
     });
     const user = await this.userRepository.findById(refreshTokenData.userId);
+    // A유저를 탈취했을 때
+    // A유저가 로그아웃하면 막힌다.
     if (!user || !user.hashedRt)
       throw new HttpException(
         '존재하지 않는 user이거나 signin상태가 아닙니다',
         404,
       );
     const rtmatches = await this.compareData(user.hashedRt, refresh_token);
+    // 누군가 A유저의 refresh토큰을 탈취했을 때
+    // A유저의 refresh를 재발급하면 여기에서 걸린다.
+    // +) access는 탈취당해도 주기가 짧다.
     if (!rtmatches)
       throw new HttpException('refresh토큰이 일치하지 않습닏다', 404);
 
@@ -136,8 +141,10 @@ export class AuthService {
       httpOnly: true,
     });
   }
+
   clearTokenCookie(res: Response) {
     res.clearCookie('access_token');
     res.clearCookie('refresh_token');
   }
+
 }
