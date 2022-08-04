@@ -16,6 +16,7 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
+    // console.log(context.getHandler())
     if (isPublic) return true;
 
     const req = context.switchToHttp().getRequest();

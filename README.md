@@ -425,3 +425,91 @@ __[auth.service.ts](https://github.com/cornpip/WOW/blob/master/server/src/auth/s
 > hashedRt와 refresh token의 일치 확인은 refresh token이 탈취당했을 때, 탈취당한 유저의 refresh를 재발급하여 탈취자의 사용을 막기위함이다.
 
 _refresh token도 정해진 기간에 해당하면 재발급한다._
+
+<br/>
+
+## SetMetadata, Guard
+__[public.decorator.ts](https://github.com/cornpip/WOW/blob/master/server/src/common/decorator/public.decorator.ts)__
+```
+import { SetMetadata } from '@nestjs/common';
+
+export const Public = () => SetMetadata('isPublic', true);
+```
+
+```
+ex)
+
+  @Public()
+  @Get('/')
+  getAllArticles(@Query('cursor') cursor?: number) {
+    return this.articleService.getAllArticles(cursor);
+  }
+```
+위처럼 사용한다. getAllArticles 핸들러에 isPublic : true 인 meta data가 들어가 있다. _class에도 사용할 수 있다._
+
+__[auth-guard.guard.ts](https://github.com/cornpip/WOW/blob/master/server/src/common/guard/auth-guard.guard.ts)__
+```
+@Injectable()
+export class AuthGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector) {}
+  public canActivate(context: ExecutionContext): boolean {
+    // Public()이 클래스전체나 핸들러에 있을 경우 auth 건너 뜀
+    const isPublic = this.reflector.getAllAndOverride('isPublic', [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    if (isPublic) return true;
+
+    const req = context.switchToHttp().getRequest();
+    if (!req.userId) throw new HttpException('권한이 없습니다', 401);
+
+    return true
+  }
+}
+```
+meta data에 접근은 @nestjs/core 에서 제공하는 Reflector를 사용한다. reflector는 2개의 인자로 meta data의 key와 context의 정보를 받는다.  
+> context는 guard의 canActivate(), interceptor의 intercept() 와 같은 method에서 사용할 수 있다. + ( filters, createParamDecorator )   
+_주의) ExecutionContext는 context가 아니다. context활용 유틸리티다. 즉 핸들러와 같은 곳에서 context 를 얻을 수 없다._
+
+__[app.module.ts](https://github.com/cornpip/WOW/blob/master/server/src/app.module.ts)__
+```
+  providers: [
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
+```
+Guard를 전역으로 사용하고 있다. 모든 컨트롤러와 라우터 핸들러에 대해 실행된다. 즉 guard는 isPublic에 대한 metadata를 확인하고 true면 로그인 검증을 하지않고 metadata가 없다면 로그인 상태를 필요로 한다. _( 미들웨어 후에 가드가 동작한다 request life cycle참조 )_
+
+<br/>
+
+## Custom decorators
+__[get-current-user-id.decorator.ts](https://github.com/cornpip/WOW/blob/master/server/src/common/decorator/get-current-user-id.decorator.ts)__
+```
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+
+export const GetCurrentUserId = createParamDecorator(
+  (_data: unknown, context: ExecutionContext): number => {
+    const req = context.switchToHttp().getRequest();
+    return req.userId;
+  },
+);
+```
+__[auth.controller.ts](https://github.com/cornpip/WOW/blob/master/server/src/auth/controller/auth.controller.ts)__
+```
+ex)
+
+  @Delete('/logout')
+  async logout(
+    @Res({ passthrough: true }) res: Response,
+    @GetCurrentUserId() userId: number,
+  ): Promise<void> {
+    await this.authService.logout(userId);
+    this.authService.clearTokenCookie(res);
+  }
+```
