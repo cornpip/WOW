@@ -513,3 +513,21 @@ ex)
     this.authService.clearTokenCookie(res);
   }
 ```
+
+<br/>
+
+## Custom Type
+__[index.d.ts](https://github.com/cornpip/WOW/blob/master/server/src/customTypes/index.d.ts)__
+```
+export default {};
+
+declare global {
+  namespace Express {
+    interface Request {
+      userId: number;
+    }
+  }
+}
+```
+d.ts는 TS의 타입 선언 파일로 JS로 컴파일 되지않는다. JS에서 에러없이 활용할 수 있는 변수들을 TS에서 타입 정의가 되지않아 사용할 수 없다면 그런 부분을 해결해준다.  
+> TS에서 모듈 활용을 위한 타입 선언이다. _( 모듈의 기능/변수 수정과 무관하다. )_
