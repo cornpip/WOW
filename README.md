@@ -309,7 +309,7 @@ __[auth.service.ts](https://github.com/cornpip/WOW/blob/master/server/src/auth/s
     return this.userRepository.update({ id: userId }, { hashedRt: hash });
   }
 ```
-hashedRt는 현재 로그인되어있는 여부와 refresh token의 확인용으로 사용한다.
+hashedRt는 요청 헤더의 refresh token의 검증용으로 사용한다.
 
 <br/>
 
@@ -422,9 +422,8 @@ __[auth.service.ts](https://github.com/cornpip/WOW/blob/master/server/src/auth/s
   }
 ```
 미들웨어에서 access token여부를 검증하고 재발급할 기간이라면 refresh가 진행된다. 재발급은 refresh token의 user의 존재 여부를 확인하고 hashedRt와 refresh token의 일치 여부를 확인한 후 access token을 발급한다.
-> hashedRt와 refresh token의 일치 확인은 refresh token이 탈취당했을 때, 탈취당한 유저의 refresh를 재발급하여 탈취자의 사용을 막기위함이다.
 
-_refresh token도 정해진 기간에 해당하면 재발급한다._
+_refresh token이 만료되면 새로 로그인 해야한다._
 
 <br/>
 
