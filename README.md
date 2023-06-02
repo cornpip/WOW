@@ -75,27 +75,27 @@ npm run start_n
 <br/>
 
 ## Main page
-<img src=img/main.PNG>
+<img src=https://github.com/cornpip/WOW/assets/74674780/38377c57-92a1-4e4e-a137-969120d2788b>
 
 <br/>
 
 ## Sign up
-<img src=img/signup.PNG>
+<img src=https://github.com/cornpip/WOW/assets/74674780/03b7cd43-be59-4bbb-8206-951c265d4837>
 
 <br/>
 
 ## Write page
-<img src=img/write.PNG>
+<img src=https://github.com/cornpip/WOW/assets/74674780/9abc4150-1ac0-4dae-a925-085bb9f0c994>
 
 <br/>
 
 ## Detail page
-<img src=img/detail.PNG>
+<img src=https://github.com/cornpip/WOW/assets/74674780/908f5356-24c8-465e-b45c-56baec4f921f>
 
 <br/>
 
 ## Mypage
-<img src=img/mypage.PNG>
+<img src=https://github.com/cornpip/WOW/assets/74674780/63d91146-3385-444e-840a-96dbe58325c6>
 
 <br/><br/>
 
@@ -110,7 +110,7 @@ __`repository`__ : sql 관련 로직을 담당합니다.
 <br/>
 
 ## ERD
-<img src=img/erd.PNG>
+<img src=https://github.com/cornpip/WOW/assets/74674780/5733ad66-ff87-480f-8a50-82e964d02e15>
 
 <br/>
 
@@ -265,12 +265,12 @@ select tag.id, tag.name, articles_count from (
 <br>
 
 ## NestJs reqest lifecycle
-<img src=img/reqlifecycle.PNG>
+<img src=https://github.com/cornpip/WOW/assets/74674780/de611d3e-5c3e-4b15-a1b7-7c3add730420>
 
 <br>
 
 ## 인증 전략
-<img src=img/auth.PNG>
+<img src=https://github.com/cornpip/WOW/assets/74674780/e2b38952-6222-4bec-9b50-c528d2409f51>
 
 <br/>
 
